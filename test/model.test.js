@@ -153,7 +153,6 @@ describe(`${DATA_SOURCE_NAME}Model`, () => {
   });
 
   describe('throwError()', () => {
-    // TODO: Update this error to match the error format returned by your endpoint.
     const mockError = {
       statusCode: 401,
       options: {

@@ -1,7 +1,6 @@
 import { GraphQLConnector } from '@gramps/gramps-express';
 import Connector from '../src/connector';
 
-// TODO: Update the data source name.
 const DATA_SOURCE_NAME = 'IMDBAPI';
 const connector = new Connector();
 
