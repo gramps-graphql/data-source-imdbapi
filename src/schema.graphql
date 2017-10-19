@@ -1,17 +1,120 @@
 # The query/queries to access data MUST extend the Query type.
 extend type Query {
-  # TODO: rename and add a description of this query
-  YourDataSource(
-    # TODO: Describe this argument
-    id: ID!
-  ): PFX_YourDataSource
+  # Search for a movie by its title and (optionally) release year.
+  searchMoviesByTitle(
+    # Argument object with the title and year to search for.
+    options: IMDB_MovieSearchInput
+  ): [IMDB_Movie]
+  # Get a given movie by its IMDB ID.
+  getMovieById(
+    # The IMDB ID of the movie to be loaded (e.g. “tt1677720”).
+    movie_id: String!
+  ): IMDB_Movie
+  # Search for a person by name.
+  #
+  # A quirk of the IMDB API is that it seems to only return a single result for
+  # searches, so keep that in mind when using this query.
+  searchPersonByName(
+    # The name to search for (e.g. “Idris Elba”).
+    name: String!
+  ): [IMDB_Person]
+  # Search for a person by their IMDB ID.
+  getPersonById(
+    # The IMDB ID to search for (e.g. “nm0252961”).
+    person_id: String!
+  ): IMDB_Person
 }
 
-# TODO: Choose a unique prefix and rename the type descriptively.
-type PFX_YourDataSource {
-  # The unique ID of the thing.
-  id: ID!
-  # Describe each field to help people use the data more effectively.
-  name: String
-  lucky_numbers: [Int]
+input IMDB_MovieSearchInput {
+  # The title of the movie to search for (e.g. “Ready Player One”).
+  title: String!
+  # (Optional) The year the movie was released.
+  year: String
+}
+
+type IMDB_Movie {
+  cast: [IMDB_Cast]!
+  content_rating: String!
+  description: String!
+  director: String!
+  genre: [String]!
+  imdb_id: String!
+  length: String!
+  metadata: IMDB_Metadata!
+  original_title: String!
+  poster: IMDB_Poster!
+  rating: String!
+  rating_count: String!
+  release_date: String!
+  stars: [String]!
+  storyline: String!
+  title: String!
+  trailer: [IMDB_Trailer]!
+  url: IMDB_Url!
+  writers: [String]!
+  year: String!
+}
+
+type IMDB_Cast {
+  character: String!
+  image: String!
+  link: String!
+  name: String!
+}
+
+type IMDB_Metadata {
+  also_known_as: [String]!
+  # The aspect ratio of the film.
+  #
+  # NOTE: This field has a typo on the API (`asp_retio`).
+  asp_ratio: String!
+  budget: String!
+  countries: [String]!
+  filming_locations: [String]!
+  gross: String!
+  languages: [String]!
+  sound_mix: [String]!
+}
+
+type IMDB_Poster {
+  large: String!
+  thumb: String!
+}
+
+type IMDB_Trailer {
+  definition: String!
+  mimeType: String!
+  videoUrl: String!
+}
+
+type IMDB_Url {
+  title: String
+  url: String!
+  year: String
+}
+
+type IMDB_Person {
+  birthday: String!
+  birthplace: String!
+  description: String!
+  filmography(filter: String = "all"): [IMDB_Filmography]!
+  image: IMDB_PersonImage!
+  person_id: String!
+  photos: [String]!
+  title: String!
+  type: [String]!
+}
+
+type IMDB_Filmography {
+  position: String!
+  imdb_id: String!
+  title: String!
+  type: String!
+  url: String!
+  year: String!
+}
+
+type IMDB_PersonImage {
+  poster: String!
+  thumb: String!
 }
