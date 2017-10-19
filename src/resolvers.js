@@ -42,7 +42,7 @@ export default {
   // Data fields (which data from the response goes to which field?)
   dataResolvers: {
     IMDB_Person: {
-      filmography: ({ filmography }, { filter }) =>
+      filmography: ({ filmography }, { filter = 'all' }) =>
         Object.keys(filmography)
           .reduce(
             (works, position) =>
@@ -58,7 +58,7 @@ export default {
               ),
             [],
           )
-          .filter(work => work.position === filter),
+          .filter(work => filter === 'all' || work.position === filter),
     },
     IMDB_Metadata: {
       // Alias this field to fix the typo.

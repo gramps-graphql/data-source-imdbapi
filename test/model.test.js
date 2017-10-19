@@ -10,8 +10,7 @@ jest.mock('../src/connector', () =>
   })),
 );
 
-// TODO: Update the data source name.
-const DATA_SOURCE_NAME = 'YourDataSource';
+const DATA_SOURCE_NAME = 'IMDBAPI';
 
 const connector = new Connector();
 const model = new Model({ connector });
@@ -21,27 +20,134 @@ describe(`${DATA_SOURCE_NAME}Model`, () => {
     expect(model).toBeInstanceOf(GraphQLModel);
   });
 
-  // TODO: Update this test to use your model’s method(s).
-  describe('getById()', () => {
+  describe('searchMoviesByTitle()', () => {
     it('calls the correct endpoint with a given ID', () => {
       const spy = jest.spyOn(connector, 'get');
 
-      model.getById('1234');
-      expect(spy).toHaveBeenCalledWith('/data/1234');
+      model.searchMoviesByTitle({ title: 'Test Movie' });
+      expect(spy).toHaveBeenCalledWith('/find/movie?title=Test+Movie');
+    });
+
+    it('correctly adds the year if one is supplied', () => {
+      const spy = jest.spyOn(connector, 'get');
+
+      model.searchMoviesByTitle({ title: 'Test Movie', year: '1979' });
+      expect(spy).toHaveBeenCalledWith(
+        '/find/movie?title=Test+Movie&year=1979',
+      );
+    });
+
+    it('ignores the year if an empty value is provided', () => {
+      const spy = jest.spyOn(connector, 'get');
+
+      model.searchMoviesByTitle({ title: 'Test Movie', year: '' });
+      expect(spy).toHaveBeenCalledWith('/find/movie?title=Test+Movie');
     });
 
     it('throws a GrampsError if something goes wrong', async () => {
-      expect.assertions(1);
+      expect.assertions(3);
 
       model.connector.get.mockImplementationOnce(() =>
-        Promise.reject({ no: 'good' }),
+        Promise.reject(Error('boom')),
       );
 
       try {
-        // TODO: Update to use one of your model’s methods.
-        await model.getById('1234');
+        await model.searchMoviesByTitle({ title: 'Test Movie' });
       } catch (error) {
         expect(error.isBoom).toEqual(true);
+        expect(error.output.payload.description).toEqual(
+          'Unable to search movies',
+        );
+        expect(error.output.payload.docsLink).toEqual(
+          'https://github.com/gramps-express/data-source-imdbapi',
+        );
+      }
+    });
+  });
+
+  describe('searchPersonByName()', () => {
+    it('calls the correct endpoint with a given ID', () => {
+      const spy = jest.spyOn(connector, 'get');
+
+      model.searchPersonByName('Famous Person');
+      expect(spy).toHaveBeenCalledWith('/find/person?name=Famous+Person');
+    });
+
+    it('throws a GrampsError if something goes wrong', async () => {
+      expect.assertions(3);
+
+      model.connector.get.mockImplementationOnce(() =>
+        Promise.reject(Error('boom')),
+      );
+
+      try {
+        await model.searchPersonByName('Famous Person');
+      } catch (error) {
+        expect(error.isBoom).toEqual(true);
+        expect(error.output.payload.description).toEqual(
+          'Unable to search people',
+        );
+        expect(error.output.payload.docsLink).toEqual(
+          'https://github.com/gramps-express/data-source-imdbapi',
+        );
+      }
+    });
+  });
+
+  describe('getMovieById()', () => {
+    it('calls the correct endpoint with a given ID', () => {
+      const spy = jest.spyOn(connector, 'get');
+
+      model.getMovieById('tt1234567');
+      expect(spy).toHaveBeenCalledWith('/movie?movie_id=tt1234567');
+    });
+
+    it('throws a GrampsError if something goes wrong', async () => {
+      expect.assertions(3);
+
+      model.connector.get.mockImplementationOnce(() =>
+        Promise.reject(Error('boom')),
+      );
+
+      try {
+        await model.getMovieById('tt1234567');
+      } catch (error) {
+        expect(error.isBoom).toEqual(true);
+        expect(error.output.payload.description).toEqual(
+          'Unable to get movie by ID',
+        );
+        expect(error.output.payload.docsLink).toEqual(
+          'https://github.com/gramps-express/data-source-imdbapi',
+        );
+      }
+    });
+  });
+
+  describe('getPersonById()', () => {
+    it('calls the correct endpoint with a given ID', () => {
+      const spy = jest.spyOn(connector, 'get');
+
+      model.getPersonById('nm1234567');
+      expect(spy).toHaveBeenCalledWith('/person?person_id=nm1234567');
+    });
+
+    it('throws a GrampsError if something goes wrong', async () => {
+      expect.assertions(3);
+
+      model.connector.get.mockImplementationOnce(() =>
+        Promise.reject(Error('boom')),
+      );
+
+      try {
+        await model.getPersonById('nm1234567');
+      } catch (error) {
+        expect(error.isBoom).toEqual(true);
+        expect(error.output.payload.description).toEqual(
+          'Unable to get person by ID',
+        );
+        expect(error.output.payload.docsLink).toEqual(
+          'https://github.com/gramps-express/data-source-imdbapi',
+        );
       }
     });
   });
@@ -67,8 +173,7 @@ describe(`${DATA_SOURCE_NAME}Model`, () => {
       );
 
       try {
-        // TODO: Update to use one of your model’s methods.
-        await model.getById(1234);
+        await model.searchMoviesByTitle({ title: 'Test Movie' });
       } catch (error) {
         // Check that GrampsError properly received the error detail.
         expect(error).toHaveProperty('isBoom', true);
