@@ -1,10 +1,9 @@
 import { GraphQLConnector } from '@gramps/gramps-express';
 
-// TODO: change `YourDataSourceConnector` to a descriptive name
-export default class YourDataSourceConnector extends GraphQLConnector {
+export default class IMDBAPIConnector extends GraphQLConnector {
   /**
-   * TODO: describe this API endpoint
+   * API for looking up movie info
    * @member {string}
    */
-  apiBaseUri = `https://example.org/v2`;
+  apiBaseUri = `https://www.theimdbapi.org/api`;
 }
