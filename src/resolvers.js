@@ -1,13 +1,7 @@
 import { MockList } from 'graphql-tools';
 import casual from 'casual';
 
-/*
- * For more information on data source resolvers, see
- * https://ibm.biz/graphql-data-source-resolvers
- */
-
 export default {
-  // Queries (where does the data come from?)
   queryResolvers: {
     searchMoviesByTitle: (rootValue, { options }, context) =>
       new Promise((resolve, reject) => {
@@ -39,9 +33,9 @@ export default {
       }),
   },
 
-  // Data fields (which data from the response goes to which field?)
   dataResolvers: {
     IMDB_Person: {
+      // Convert the filmography object into an array for filtering/typing.
       filmography: ({ filmography }, { filter = 'all' }) =>
         Object.keys(filmography)
           .reduce(
@@ -61,12 +55,11 @@ export default {
           .filter(work => filter === 'all' || work.position === filter),
     },
     IMDB_Metadata: {
-      // Alias this field to fix the typo.
+      // Alias this field to fix a typo.
       asp_ratio: data => data.asp_retio,
     },
   },
 
-  // Mock data (How can I get real-feeling fake data while working offline?)
   mockResolvers: {
     IMDB_Movie: () => ({
       cast: () => new MockList([1, 10]),

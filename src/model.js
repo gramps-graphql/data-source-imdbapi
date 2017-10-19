@@ -29,7 +29,6 @@ export default class IMDBAPIModel extends GraphQLModel {
       .catch(res =>
         this.throwError(res, {
           description: 'Unable to search movies',
-          docsLink: 'https://github.com/gramps-express/data-source-imdbapi',
         }),
       );
   }
@@ -50,7 +49,6 @@ export default class IMDBAPIModel extends GraphQLModel {
       .catch(res =>
         this.throwError(res, {
           description: 'Unable to search people',
-          docsLink: 'https://github.com/gramps-express/data-source-imdbapi',
         }),
       );
   }
@@ -68,7 +66,6 @@ export default class IMDBAPIModel extends GraphQLModel {
       .catch(res =>
         this.throwError(res, {
           description: 'Unable to get movie by ID',
-          docsLink: 'https://github.com/gramps-express/data-source-imdbapi',
         }),
       );
   }
@@ -86,7 +83,6 @@ export default class IMDBAPIModel extends GraphQLModel {
       .catch(res =>
         this.throwError(res, {
           description: 'Unable to get person by ID',
-          docsLink: 'https://github.com/gramps-express/data-source-imdbapi',
         }),
       );
   }
@@ -104,7 +100,7 @@ export default class IMDBAPIModel extends GraphQLModel {
       description: error.message || 'Something went wrong.',
       targetEndpoint: error.options ? error.options.uri : null,
       graphqlModel: this.constructor.name,
-      docsLink: null,
+      docsLink: 'https://github.com/gramps-express/data-source-imdbapi',
     };
 
     throw GrampsError({
