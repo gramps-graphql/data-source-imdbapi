@@ -3,28 +3,28 @@ import casual from 'casual';
 
 export default {
   queryResolvers: {
-    searchMoviesByTitle: (rootValue, { options }, context) =>
+    searchMoviesByTitle: (_, { options }, context) =>
       new Promise((resolve, reject) => {
         context.IMDBAPI
           .searchMoviesByTitle(options)
           .then(resolve)
           .catch(reject);
       }),
-    getMovieById: (rootValue, { movie_id }, context) =>
+    getMovieById: (_, { movie_id }, context) =>
       new Promise((resolve, reject) => {
         context.IMDBAPI
           .getMovieById(movie_id)
           .then(resolve)
           .catch(reject);
       }),
-    searchPersonByName: (rootValue, { name }, context) =>
+    searchPersonByName: (_, { name }, context) =>
       new Promise((resolve, reject) => {
         context.IMDBAPI
           .searchPersonByName(name)
           .then(resolve)
           .catch(reject);
       }),
-    getPersonById: (rootValue, { person_id }, context) =>
+    getPersonById: (_, { person_id }, context) =>
       new Promise((resolve, reject) => {
         context.IMDBAPI
           .getPersonById(person_id)
@@ -66,18 +66,21 @@ export default {
       content_rating: casual.random_element(['PG', 'R', 'PG-13']),
       description: casual.sentences(2),
       director: casual.name,
-      genre: () => [casual.random_element(['Action', 'Drama', 'Comedy'])],
+      genre: () =>
+        new MockList([1, 3], () =>
+          casual.random_element(['Action', 'Drama', 'Comedy']),
+        ),
       imdb_id: `tt${Math.round(10000000 * Math.random())}`,
       length: `${casual.integer(75, 190)}`,
       original_title: casual.title,
       rating: casual.integer(0, 100) / 10,
       rating_count: casual.integer(0, 300),
       release_date: casual.date('YYYY-MM-DD'),
-      stars: () => [casual.name],
+      stars: () => new MockList([1, 4], () => casual.name),
       storyline: casual.sentences(2),
       title: casual.title,
       trailer: () => new MockList([1, 3]),
-      writers: () => [casual.name, casual.name],
+      writers: () => new MockList([1, 4], () => casual.name),
       year: casual.year,
     }),
     IMDB_Cast: () => ({
@@ -93,13 +96,23 @@ export default {
       budget: casual
         .integer(900000, 15000000)
         .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-      countries: [casual.city, casual.city],
-      filming_locations: [casual.city, casual.city],
+      countries: () => new MockList([1, 4], () => casual.country),
+      filming_locations: () => new MockList([1, 4], () => casual.city),
       gross: casual
         .integer(1000000, 50000000)
         .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-      languages: [casual.random_element(['English', 'Spanish'])],
-      sound_mix: ['Auro 11.1', 'Dolby Digital', 'Dolby Surround 7.1'],
+      languages: () =>
+        new MockList([1, 4], () =>
+          casual.random_element(['English', 'Spanish']),
+        ),
+      sound_mix: () =>
+        new MockList([1, 3], () =>
+          casual.random_element([
+            'Auro 11.1',
+            'Dolby Digital',
+            'Dolby Surround 7.1',
+          ]),
+        ),
     }),
     IMDB_Poster: () => ({
       large:
@@ -135,7 +148,10 @@ export default {
         'https://images-na.ssl-images-amazon.com/images/M/MV5BMTQxNTY4MTc0MV5BMl5BanBnXkFtZTcwMDQ2MTY5Mg@@._V1_SY1000_CR0,0,666,1000_AL_.jpg',
       ],
       title: casual.name,
-      type: ['Actor', 'Writer', 'Producer'],
+      type: () =>
+        new MockList([1, 3], () =>
+          casual.random_element(['Actor', 'Writer', 'Producer']),
+        ),
     }),
     IMDB_Filmography: () => ({
       position: casual.random_element(['actor', 'writer', 'producer', 'self']),
