@@ -164,22 +164,18 @@ describe(`IMDBAPI resolvers`, () => {
 
       it('mocks the genre', () => {
         expect(
-          ['Action', 'Drama', 'Comedy'].includes(mockResolvers.genre()[0]),
+          ['Action', 'Drama', 'Comedy'].includes(
+            mockResolvers.genre().wrappedFunction(),
+          ),
         ).toBe(true);
       });
 
       it('mocks the stars', () => {
-        expect(mockResolvers.stars()).toHaveLength(1);
+        expect(mockResolvers.stars().wrappedFunction()).toBeDefined();
       });
 
       it('mocks the writers', () => {
-        expect(mockResolvers.writers()).toHaveLength(2);
-      });
-
-      it('mocks the genre', () => {
-        expect(
-          ['Action', 'Drama', 'Comedy'].includes(mockResolvers.genre()[0]),
-        ).toBe(true);
+        expect(mockResolvers.writers().wrappedFunction()).toBeDefined();
       });
 
       expectMockFields(mockResolvers, [
@@ -202,7 +198,13 @@ describe(`IMDBAPI resolvers`, () => {
         'year',
       ]);
 
-      expectMockList(mockResolvers, ['cast', 'trailer']);
+      expectMockList(mockResolvers, [
+        'cast',
+        'genre',
+        'stars',
+        'trailer',
+        'writers',
+      ]);
     });
 
     describe('IMDB_Cast', () => {
@@ -214,6 +216,32 @@ describe(`IMDBAPI resolvers`, () => {
     describe('IMDB_Metadata', () => {
       const mockResolvers = resolvers.mockResolvers.IMDB_Metadata();
 
+      it('mocks the countries', () => {
+        expect(mockResolvers.countries().wrappedFunction()).toBeDefined();
+      });
+
+      it('mocks the filming_locations', () => {
+        expect(
+          mockResolvers.filming_locations().wrappedFunction(),
+        ).toBeDefined();
+      });
+
+      it('mocks the languages', () => {
+        expect(
+          ['English', 'Spanish'].includes(
+            mockResolvers.languages().wrappedFunction(),
+          ),
+        ).toBe(true);
+      });
+
+      it('mocks the sound_mix', () => {
+        expect(
+          ['Auro 11.1', 'Dolby Digital', 'Dolby Surround 7.1'].includes(
+            mockResolvers.sound_mix().wrappedFunction(),
+          ),
+        ).toBe(true);
+      });
+
       expectMockFields(mockResolvers, [
         'also_known_as',
         'asp_ratio',
@@ -221,6 +249,13 @@ describe(`IMDBAPI resolvers`, () => {
         'countries',
         'filming_locations',
         'gross',
+        'languages',
+        'sound_mix',
+      ]);
+
+      expectMockList(mockResolvers, [
+        'countries',
+        'filming_locations',
         'languages',
         'sound_mix',
       ]);
@@ -247,6 +282,14 @@ describe(`IMDBAPI resolvers`, () => {
     describe('IMDB_Person', () => {
       const mockResolvers = resolvers.mockResolvers.IMDB_Person();
 
+      it('mocks the type', () => {
+        expect(
+          ['Actor', 'Writer', 'Producer'].includes(
+            mockResolvers.type().wrappedFunction(),
+          ),
+        ).toBe(true);
+      });
+
       expectMockFields(mockResolvers, [
         'birthday',
         'birthplace',
@@ -258,7 +301,7 @@ describe(`IMDBAPI resolvers`, () => {
         'type',
       ]);
 
-      expectMockList(mockResolvers, ['filmography']);
+      expectMockList(mockResolvers, ['filmography', 'type']);
     });
 
     describe('IMDB_Filmography', () => {
