@@ -1,3 +1,7 @@
+# DEPRECATED — DO NOT USE
+
+Unfortunately, the API this data source wraps is unstable to the point of being unusable. This data source is also not compatible with the 1.x format of GrAMPS, so it _should not_ be used. You've been warned.
+
 <a href="https://ibm.biz/gramps-graphql"><img src="https://gramps-graphql.github.io/gramps-express/assets/img/gramps-banner.png" alt="GrAMPS · An easier way to manage the data sources powering your GraphQL server" width="450"></a>
 
 # GrAMPS GraphQL Data Source for the [IMDB API](http://www.theimdbapi.org/)
